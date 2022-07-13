@@ -1,14 +1,22 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import cors from 'cors';
+import bodyParser from 'body-parser';
 
 import Connection from "./db/db.js";
+import Router from './routes/route.js';
 
 dotenv.config();
 
 const app = express();
 
-app.listen(3001, '0.0.0.0', () => {
-    console.log('Listening on port http://localhost:3001');
+app.use(cors());
+app.use(bodyParser.json({extended: true}));
+app.use(bodyParser.urlencoded({extended: true}));
+app.use('/', Router);
+
+app.listen(8000, '0.0.0.0', () => {
+    console.log('Listening on port http://localhost:8000');
 });
 
 const USERNAME = process.env.DB_USERNAME;
