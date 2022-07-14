@@ -44,6 +44,4 @@ export const createNewToken = async (req, res) => {
 
         return res.status(200).json({ accessToken: accessToken })
     })
-
-
 }

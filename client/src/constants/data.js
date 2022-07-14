@@ -1,5 +1,3 @@
-
-
 export const categories = [
     {id:1, type: 'Kat1'},
     {id:2, type: 'Kat2'},

@@ -1,8 +1,8 @@
-import {useState, useContext} from 'react';
+import {useState, useContext, useEffect} from 'react';
 import {Box, Button, TextField, styled, Typography} from "@mui/material";
 import {API} from "../../service/api";
 import {DataContext} from "../../context/DataProvider";
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Component = styled(Box)`
     width: 500px;
@@ -39,7 +39,7 @@ const Error = styled(Typography)`
   margin-top: 10px;
 `
 
-const signupInicials = {
+const signupInicial = {
     name: '',
     username: '',
     password: '',
@@ -53,12 +53,16 @@ const loginInitial = {
 const Login = ({isUserAuthenticated}) => {
 
     const [login, setLogin] = useState(loginInitial);
-    const [signup, setSignup] = useState(signupInicials);
-    const [error, setError] = useState('');
+    const [signup, setSignup] = useState(signupInicial);
+    const [error, showError] = useState('');
     const [account, toggleAccount] = useState('login');
 
-    const {setAccount} = useContext(DataContext);
     const navigate = useNavigate();
+    const {setAccount} = useContext(DataContext);
+
+    useEffect(() => {
+        showError(false);
+    }, [login]);
 
     const onValueChange = (e) => {
         setLogin({...login, [e.target.name]: e.target.value});
@@ -71,34 +75,34 @@ const Login = ({isUserAuthenticated}) => {
     const loginUser = async () => {
         let response = await API.userLogin(login);
         if (response.isSuccess) {
-            setError('');
+            showError('');
 
             sessionStorage.setItem('accessToken', `Bearer ${response.data.accessToken}`);
             sessionStorage.setItem('refreshToken', `Bearer ${response.data.refreshToken}`);
 
-            setAccount({username: response.data.username, name: response.data.name});
+            setAccount({name: response.data.name, username: response.data.username});
 
             isUserAuthenticated(true);
-
+            setLogin(loginInitial);
             navigate('/');
         } else {
-            setError('Something went wrong!');
+            showError('Something went wrong!');
         }
     }
 
     const signupUser = async () => {
         let response = await API.userSignup(signup);
         if (response.isSuccess) {
-            setError('');
-            setSignup(signupInicials);
+            showError('');
+            setSignup(signupInicial);
             toggleAccount('login');
         } else {
-            setError('Something went wrong!');
+            showError('Something went wrong!');
         }
     }
 
     const toggleSignup = () => {
-        account === 'signup' ? toggleAccount('login') : toggleAccount('signup')
+        account === 'signup' ? toggleAccount('login') : toggleAccount('signup');
     }
 
 
@@ -109,11 +113,12 @@ const Login = ({isUserAuthenticated}) => {
                 {
                     account === 'login' ?
                         <Wrapper>
-                            <TextField variant="standard" value={login.username} onChange={(e) => onValueChange(e)} name="username" label="Wprowadź nazwę użytkownika"/>
-                            <TextField variant="standard" value={login.password} onChange={(e) => onValueChange(e)} name="password" label="Wprowadź hasło"/>
+                            <TextField variant="standard" value={login.username} onChange={(e) => onValueChange(e)} name='username' label="Wprowadź nazwę użytkownika"/>
+                            <TextField variant="standard" value={login.password} onChange={(e) => onValueChange(e)} name='password' label="Wprowadź hasło"/>
 
                             {error && <Error>{error}</Error>}
-                            <Button onClick={() => loginUser()} variant="contained">Zaloguj się!</Button>
+
+                            <Button variant="contained" onClick={() => loginUser()}>Zaloguj się!</Button>
                             <SignupButton onClick={() => toggleSignup()}>Stwórz konto!</SignupButton>
                         </Wrapper>
                         :
@@ -122,7 +127,6 @@ const Login = ({isUserAuthenticated}) => {
                             <TextField variant="standard" onChange={(e) => onInputChange(e)} name='username' label="Wprowadź Nazwę użytkownika"/>
                             <TextField variant="standard" onChange={(e) => onInputChange(e)} name='password' label="Wprowadź hasło"/>
 
-                            {error && <Error>{error}</Error>}
                             <Button onClick={() => signupUser()}>Zarejestruj się!</Button>
                             <SignupButton variant="contained" onClick={() => toggleSignup()}>Już mam konto konto!</SignupButton>
                         </Wrapper>

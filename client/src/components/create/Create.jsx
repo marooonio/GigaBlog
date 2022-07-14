@@ -1,4 +1,4 @@
-import {useState, useEffect, useContext} from "react";
+import React, {useState, useEffect, useContext} from "react";
 
 import {Box, Button, FormControl, InputBase, styled, TextareaAutosize} from "@mui/material";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
@@ -10,6 +10,9 @@ import {API} from '../../service/api';
 
 const Container = styled(Box) `
     margin: 50px 100px;
+        [theme].breakpoints.down('md'): {
+         margin: 0
+}
 `;
 
 const StyledFormControl = styled(FormControl)`
@@ -37,18 +40,18 @@ const initialPost = {
     picture: '',
     username: '',
     categories: '',
-    createDate: new Date(),
+    createDate: new Date()
 }
 
 const CreatePost = () => {
+
+    const location = useLocation();
+    const navigate = useNavigate();
 
     const [post, setPost] = useState(initialPost);
     const [file, setFile] = useState('');
 
     const {account} = useContext(DataContext);
-
-    const location = useLocation();
-    const navigate = useNavigate();
 
     useEffect(() => {
         const getImage = async () => {
@@ -96,7 +99,10 @@ const CreatePost = () => {
             </StyledFormControl>
 
             <TextArea
-                winRows={5} placeholder='Opowiedz coś...!' onChange={(e) => handleChange(e)} name="description"
+                winRows={5}
+                placeholder='Opowiedz coś...!'
+                name="description"
+                onChange={(e) => handleChange(e)}
             />
         </Container>
     )
