@@ -39,7 +39,7 @@ const Error = styled(Typography)`
   margin-top: 10px;
 `
 
-const signupInicial = {
+const signupInitial = {
     name: '',
     username: '',
     password: '',
@@ -53,7 +53,7 @@ const loginInitial = {
 const Login = ({isUserAuthenticated}) => {
 
     const [login, setLogin] = useState(loginInitial);
-    const [signup, setSignup] = useState(signupInicial);
+    const [signup, setSignup] = useState(signupInitial);
     const [error, showError] = useState('');
     const [account, toggleAccount] = useState('login');
 
@@ -94,7 +94,7 @@ const Login = ({isUserAuthenticated}) => {
         let response = await API.userSignup(signup);
         if (response.isSuccess) {
             showError('');
-            setSignup(signupInicial);
+            setSignup(signupInitial);
             toggleAccount('login');
         } else {
             showError('Something went wrong!');
