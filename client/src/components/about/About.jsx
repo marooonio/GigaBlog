@@ -14,7 +14,7 @@ const About = () => {
     return (
         <Box>
             <Wrapper>
-                <Typography variant="h3">Mareeek</Typography>
+                <Typography variant="h3">Cześć!</Typography>
                 <Text variant="h5">Mój pierwszy tak zaawansowany projekt wykonany na kursu MEGAK.<br />
                     <Box component="span" style={{ marginLeft: 5 }}>
                         <Link href="https://github.com/marooonio" color="inherit" target="_blank"><GitHub /></Link>
